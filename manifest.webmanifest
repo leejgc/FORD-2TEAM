@@ -1,7 +1,7 @@
 {
   "name": "FORD 2-TEAM",
   "short_name": "FORD 2-TEAM",
-  "description": "포드2팀 실적/근태 관리",
+  "description": "FORD 2-TEAM",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
