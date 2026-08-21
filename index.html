@@ -1,0 +1,1334 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#172b50">
+  <title>FORD 2-TEAM</title>
+
+  <meta name="description" content="FORD 2-TEAM 실적/근태 관리">
+  <meta property="og:title" content="FORD 2-TEAM">
+  <meta property="og:description" content="FORD 2-TEAM 실적/근태 관리">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://leejgc.github.io/FORD-2TEAM/">
+
+  <style>
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif;background:#f5f3ee;color:#14213d}
+    button,input,select{font:inherit}.wrap{max-width:980px;margin:auto;padding:22px 16px 70px}
+    .hero{background:linear-gradient(135deg,#1d3158,#142747);color:white;border-radius:24px;padding:25px 24px;box-shadow:0 10px 28px #14274722}
+    .eyebrow{font-size:12px;letter-spacing:2px;color:#aebbd1;font-weight:800}.hero h1{margin:8px 0 5px;font-size:28px}.hero p{margin:0;color:#cbd4e3;font-size:14px}
+    .tabs{display:grid;grid-template-columns:repeat(4,1fr);margin:14px 0 18px;gap:10px}.tab{border:1px solid #dedbd3;background:white;padding:13px;border-radius:14px;font-weight:800;color:#6a7280}.tab.active{background:#1b2e53;color:#fff;border-color:#1b2e53}
+    .card{background:#fff;border:1px solid #e1ded6;border-radius:22px;padding:18px;box-shadow:0 4px 16px #00000008;margin-bottom:16px}
+    .monthbar{display:flex;align-items:center;justify-content:space-between;gap:10px}.monthbar h2{font-size:21px;margin:0}.arrow{width:42px;height:42px;border:0;border-radius:12px;background:#f2f1ed;font-size:22px;color:#1c2d4d;cursor:pointer}
+    .hint{font-size:12px;color:#7a808a;margin:12px 0 0}.tablewrap{overflow-x:auto;margin-top:16px;border:1px solid #e5e2db;border-radius:17px}
+    table{border-collapse:separate;border-spacing:0;width:100%;min-width:780px;background:#fff;border:2px solid #18356b;border-radius:14px;overflow:hidden}th,td{border-bottom:1px solid #c6d2e3;border-right:1px solid #c6d2e3;padding:14px 9px;text-align:center}th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}
+    th{background:#edf4fc;font-size:16px;line-height:1.25;font-weight:800;color:#173468}.person{font-weight:900;font-size:16px;text-align:left;white-space:nowrap;padding-left:16px}.direct-head{color:#173468}.total-head{background:#fff6dc}td.total-cell{background:#fff9e9}
+    .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:12px;font-weight:800;color:#626b78;margin:0 0 6px}.field input,.field select{width:100%;border:1px solid #dcd9d1;border-radius:12px;padding:12px;background:white;color:#14213d}
+    .full{grid-column:1/-1}.primary{width:100%;border:0;border-radius:13px;padding:14px;background:#1b2e53;color:#fff;font-weight:900;cursor:pointer}.records{margin-top:16px}.record{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #ece9e2}.record small{display:block;color:#7a808a;margin-top:3px}.danger{border:0;background:#f8eded;color:#b33a3a;border-radius:9px;padding:8px 10px;font-weight:800;cursor:pointer}
+    .modal{position:fixed;inset:0;background:#10182880;display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:5}.modal.show{display:flex}.sheet{background:#fff;width:min(650px,100%);max-height:78vh;overflow:auto;border-radius:22px;padding:20px}.sheethead{display:flex;justify-content:space-between;gap:10px;align-items:start}.sheet h3{margin:0}.close{border:0;background:#f0efeb;border-radius:10px;width:38px;height:38px;font-size:20px}.detail{padding:13px 0;border-bottom:1px solid #ece9e2}.detail b{display:block}.detail span{color:#626b78;font-size:14px}.empty{padding:28px 5px;text-align:center;color:#8b9098}
+    @media(max-width:600px){.wrap{padding:14px 10px 55px}.hero{border-radius:20px;padding:21px 18px}.hero h1{font-size:25px}.card{padding:14px;border-radius:18px}.admin-grid{grid-template-columns:1fr}.full{grid-column:auto}}
+  
+    thead th{border-bottom:2px solid #18356b}
+    th:first-child,td:first-child{border-right:2px solid #18356b}
+    th:last-child,td:last-child{border-left:2px solid #18356b;border-right:0}
+    tr:last-child td{border-bottom:0}
+    .count{
+      border:1px solid #9daac0;
+      background:#fff;
+      border-radius:999px;
+      min-width:62px;
+      padding:7px 14px;
+      font-weight:400;
+      font-size:15px;
+      line-height:1;
+      color:#172b50;
+      cursor:pointer
+    }
+    .count.has{background:#f8fbff}
+    .direct-count{color:#172b50}
+    .total-count{
+      font-weight:800;
+      border:2px solid #a97a20;
+      color:#172b50;
+      background:#fffdf6
+    }
+
+  
+    .closing-wrap{margin-top:18px}
+    .closing-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 16px;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      color:#eef3fb;
+      font-size:14px;
+      font-weight:700;
+      backdrop-filter:blur(4px)
+    }
+    .closing-pill strong{
+      color:#f1b84b;
+      font-size:18px;
+      font-weight:900
+    }
+    .closing-pill em{
+      font-style:normal;
+      color:#d7dfec;
+      font-weight:600
+    }
+
+  
+    .performance-card{padding:20px}
+    .performance-title-wrap{margin-bottom:16px}
+    .performance-title{margin:0;font-size:22px;color:#172b50}
+    .performance-subtitle{margin:6px 0 0;font-size:13px;color:#737b88}
+    .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .plan-box{
+      border:1px solid #e1ded6;
+      border-radius:18px;
+      background:#fffdfa;
+      padding:18px;
+    }
+    .plan-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:14px;
+    }
+    .plan-name{
+      font-size:18px;
+      font-weight:900;
+      color:#172b50;
+    }
+    .plan-badge{
+      display:inline-flex;
+      align-items:center;
+      padding:7px 11px;
+      border-radius:999px;
+      background:#fff3d7;
+      color:#b57a17;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .criteria-list{
+      border-top:1px solid #ebe7df;
+    }
+    .criteria-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:13px 2px;
+      border-bottom:1px solid #ebe7df;
+      font-size:15px;
+      color:#404958;
+    }
+    .criteria-row:last-child{border-bottom:0}
+    .criteria-row strong{
+      color:#172b50;
+      font-size:16px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    @media(max-width:700px){
+      .plan-grid{grid-template-columns:1fr}
+    }
+
+  
+    .performance-centered{text-align:center}
+    .criteria-heading{font-size:18px;font-weight:900;color:#172b50;margin:22px 0 14px}
+    .criteria-heading span{margin-left:5px}
+    .plan-a{border-color:#a9d7bd;background:#fbfefc}
+    .plan-b{border-color:#f2c36c;background:#fffdf9}
+    .plan-name-a{display:inline-flex;padding:8px 14px;border-radius:10px;background:#149a5b;color:#fff}
+    .plan-name-b{display:inline-flex;padding:8px 14px;border-radius:10px;background:#f0a000;color:#fff}
+    .plan-a .criteria-row strong{color:#149a5b}
+    .plan-b .criteria-row strong{color:#e89500}
+
+  
+    .achievement-section{margin-top:28px}
+    .member-performance{padding:18px 0;border-top:1px solid #e8e4dc}
+    .member-performance:first-child{border-top:0}
+    .member-performance-name{font-size:18px;font-weight:900;color:#172b50;margin:0 0 12px}
+    .member-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .progress-card{border:1px solid #dfe4eb;border-radius:16px;padding:15px;background:#fff}
+    .progress-card.a{border-color:#b8d9c5;background:#fbfefc}
+    .progress-card.b{border-color:#f0cf91;background:#fffdf9}
+    .progress-card-title{font-size:15px;font-weight:900;margin-bottom:10px}
+    .progress-card.a .progress-card-title{color:#148d57}
+    .progress-card.b .progress-card-title{color:#d98a00}
+    .metric{padding:9px 0;border-top:1px solid #ece9e2}
+    .metric:first-of-type{border-top:0}
+    .metric-line{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:13px;color:#3e4858;margin-bottom:6px}
+    .metric-line strong{font-size:14px;color:#172b50}
+    .bar{height:7px;border-radius:999px;background:#e9e7e1;overflow:hidden}
+    .bar > span{display:block;height:100%;border-radius:999px}
+    .progress-card.a .bar > span{background:#15945a}
+    .progress-card.b .bar > span{background:#e99a10}
+    .no-target{font-size:12px;color:#8a9099}
+    .personal-card{padding:20px}
+    .personal-form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .personal-form label{font-size:13px;font-weight:800;color:#172b50}
+    .personal-form input,.personal-form select{display:block;width:100%;box-sizing:border-box;margin-top:7px;padding:11px 12px;border:1px solid #dcd8cf;border-radius:10px;background:#fff;color:#172b50;font:inherit}
+    .personal-form .save{grid-column:1/-1}
+    @media(max-width:700px){
+      .tabs{grid-template-columns:1fr 1fr}
+      .member-plan-grid,.personal-form{grid-template-columns:1fr}
+    }
+
+  
+    .criteria-combined{
+      border:1px solid #dfe4eb;
+      border-radius:16px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .criteria-plan{padding:16px}
+    .criteria-plan + .criteria-plan{border-top:1px solid #e8e4dc}
+    .criteria-plan-a{background:#fbfefc}
+    .criteria-plan-b{background:#fffdf9}
+    .member-accordion{
+      border:1px solid #dfe4eb;
+      border-radius:14px;
+      overflow:hidden;
+      background:#fff;
+      margin-bottom:10px;
+    }
+    .member-summary{
+      width:100%;
+      border:0;
+      background:#fff;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      cursor:pointer;
+      color:#172b50;
+    }
+    .member-summary-name{
+      font-size:16px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .member-summary-meta{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      font-size:13px;
+      font-weight:800;
+    }
+    .threew{color:#2f6db2}
+    .a-rate{color:#149a5b}
+    .b-rate{color:#e89500}
+    .chev{color:#6f7885;font-size:16px}
+    .member-detail{display:none;border-top:1px solid #e8e4dc}
+    .member-detail.open{display:block}
+    .combined-plan{background:#fff}
+    .plan-section{padding:15px 16px}
+    .plan-section + .plan-section{border-top:1px solid #e8e4dc}
+    .plan-section-a{background:#fbfefc}
+    .plan-section-b{background:#fffdf9}
+    .plan-section-a .bar > span{background:#15945a}
+    .plan-section-b .bar > span{background:#e99a10}
+    .plan-section-a .progress-card-title{color:#148d57}
+    .plan-section-b .progress-card-title{color:#d98a00}
+    @media(max-width:700px){
+      .member-summary{align-items:flex-start}
+      .member-summary-meta{gap:8px}
+    }
+
+  
+    .attendance-checks{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:9px;
+    }
+    .attendance-check{
+      display:flex !important;
+      align-items:center;
+      gap:9px;
+      margin:0 !important;
+      padding:11px 12px;
+      border:1px solid #dcd9d1;
+      border-radius:12px;
+      background:#fff;
+      color:#14213d !important;
+      font-size:14px !important;
+      font-weight:700 !important;
+      cursor:pointer;
+    }
+    .attendance-check input{
+      width:18px !important;
+      height:18px;
+      margin:0;
+      accent-color:#1b2e53;
+      flex:0 0 auto;
+    }
+    .attendance-check:has(input:checked){
+      border-color:#7488a8;
+      background:#f2f6fb;
+    }
+    @media(max-width:600px){
+      .attendance-checks{grid-template-columns:1fr}
+    }
+
+  
+    .login-overlay{
+      position:fixed;inset:0;z-index:9999;
+      display:flex;align-items:center;justify-content:center;
+      padding:18px;background:#f5f3ee;
+    }
+    .login-overlay.hidden{display:none}
+    .login-box{
+      width:min(430px,100%);
+      background:#fff;border:1px solid #e1ded6;border-radius:22px;
+      padding:26px;box-shadow:0 14px 38px #14274722;
+    }
+    .login-eyebrow{
+      font-size:12px;letter-spacing:2px;color:#6d7b91;font-weight:800;
+    }
+    .login-box h2{margin:8px 0 6px;color:#172b50;font-size:25px}
+    .login-box p{margin:0 0 18px;color:#707785;font-size:14px}
+    .login-box input{
+      width:100%;border:1px solid #dcd9d1;border-radius:12px;
+      padding:13px 14px;background:#fff;color:#14213d;font:inherit;
+    }
+    .login-box button{
+      width:100%;margin-top:10px;border:0;border-radius:12px;
+      padding:13px 14px;background:#1b2e53;color:#fff;font-weight:900;
+      cursor:pointer;
+    }
+    .login-box button:disabled{opacity:.55;cursor:default}
+    .entry-message{min-height:20px;margin-top:10px;font-size:13px;color:#b33a3a}
+    .fixed-member{
+      margin-top:7px;padding:11px 12px;border:1px solid #dcd9d1;
+      border-radius:10px;background:#f7f8fa;color:#172b50;font-weight:900;
+    }
+
+  
+    .criteria-toggle{
+      width:100%;border:0;background:transparent;padding:0;margin:22px 0 14px;
+      display:flex;align-items:center;justify-content:space-between;
+      color:#172b50;font-size:18px;font-weight:900;cursor:pointer;text-align:left
+    }
+    .criteria-chevron{color:#6f7885;font-size:16px}
+    .criteria-collapsible{display:none}
+    .criteria-collapsible.open{display:block}
+    .criteria-combined .criteria-plan{padding:12px 16px}
+    .criteria-combined .plan-top{margin-bottom:7px}
+    .criteria-combined .criteria-row{padding:8px 2px}
+    .criteria-combined .criteria-row>span{font-weight:800;color:#29384f}
+    .criteria-combined .criteria-row>strong{font-weight:400}
+    .member-summary-left{display:flex;align-items:center;gap:9px;min-width:0}
+    .member-summary-right{
+      margin-left:auto;display:flex;align-items:center;justify-content:flex-end;
+      gap:12px;flex:1;font-size:13px;font-weight:800;white-space:nowrap
+    }
+    @media(max-width:600px){
+      .member-summary{align-items:center;gap:8px;padding:13px 12px}
+      .member-summary-left{gap:7px}
+      .member-summary-right{gap:8px}
+      .member-summary-name{font-size:15px}
+      .member-summary-right,.threew{font-size:12px}
+    }
+
+  
+    .performance-save-button{
+      width:100%;
+      margin-top:18px;
+      padding:13px 16px;
+      border:0;
+      border-radius:12px;
+      background:#1b2e53;
+      color:#fff;
+      font-size:15px;
+      font-weight:800;
+      line-height:1.2;
+      box-shadow:none;
+      cursor:pointer;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+    .performance-save-button:active{
+      transform:translateY(1px);
+      opacity:.92;
+    }
+
+
+    /* 실적 상세 최종 정렬 */
+    .metric-line > span{
+      font-weight:800;
+      color:#29384f;
+    }
+    .metric-line > strong{
+      font-weight:400 !important;
+      color:#172b50;
+    }
+
+    /* 3W 우측 정렬 + 0 값 강조 */
+    .member-summary-right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:9px;
+      flex:1;
+      white-space:nowrap;
+    }
+    .threew{
+      margin-left:auto;
+      text-align:right;
+      color:#2f6db2;
+      font-weight:700;
+    }
+    .threew.zero-value{
+      color:#b85b5b;
+    }
+
+    /* 실적 저장 버튼: 앱 전체 버튼 UI와 통일 */
+    #savePerformance.performance-save-button{
+      display:block;
+      width:100%;
+      margin-top:18px;
+      padding:14px 16px;
+      border:0 !important;
+      border-radius:13px !important;
+      background:#1b2e53 !important;
+      color:#fff !important;
+      font-size:15px;
+      font-weight:900;
+      line-height:1.2;
+      box-shadow:none !important;
+      cursor:pointer;
+      appearance:none;
+      -webkit-appearance:none;
+    }
+    #savePerformance.performance-save-button:active{
+      transform:translateY(1px);
+      opacity:.92;
+    }
+
+
+/* NEW MOBILE SHELL */
+body{background:#f7f9fc}.app-shell{max-width:980px;margin:auto;min-height:100vh}.top-header{height:72px;background:#fff;border-bottom:1px solid #e5ebf2;display:grid;grid-template-columns:56px 1fr 56px;align-items:center;position:sticky;top:0;z-index:20;padding:0 12px}.icon-btn,.brand-home{border:0;background:transparent;color:#102b58;cursor:pointer}.icon-btn{font-size:27px}.brand-home{font-size:23px;font-weight:900;justify-self:center}.quick-nav{position:sticky;top:72px;z-index:19;display:grid;grid-template-columns:repeat(5,1fr);background:#062b62}.quick-item{border:0;background:transparent;color:#fff;padding:11px 2px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:800}.quick-icon{font-size:22px;line-height:1}.quick-item.active{background:rgba(255,255,255,.10)}.main-content{padding:28px 22px 60px}.home-card{background:#fff;border:1px solid #e1e7ef;border-radius:20px;box-shadow:0 6px 22px rgba(18,44,82,.06);padding:24px;margin-bottom:22px}.home-card h2{margin:0;color:#102b58;font-size:22px}.home-card p{margin:10px 0 18px;color:#657388;font-size:14px}.customer-search-row{display:flex}.customer-search-row input{flex:1;min-width:0;border:1px solid #d8e0ea;border-right:0;border-radius:12px 0 0 12px;padding:15px 16px}.customer-search-row button{width:58px;border:0;border-radius:0 12px 12px 0;background:#062b62;color:#fff;font-size:24px}.customer-search-row.compact button{width:auto;padding:0 18px;font-size:14px}.my-performance-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.my-performance-head select{border:1px solid #d8e0ea;border-radius:10px;background:#fff;padding:10px;color:#243b60;font-weight:800}.home-metric{padding:16px 0;border-top:1px solid #edf0f4}.home-metric:first-child{border-top:0}.home-metric-line{display:flex;justify-content:space-between;gap:12px;margin-bottom:9px}.home-metric-line span{font-weight:800}.home-metric-line strong{font-weight:700}.home-metric.a strong{color:#15945a}.home-metric.b strong{color:#1769d2}.home-bar{height:8px;background:#e9edf2;border-radius:999px;overflow:hidden}.home-bar i{display:block;height:100%;border-radius:999px}.home-metric.a .home-bar i{background:#15945a}.home-metric.b .home-bar i{background:#1769d2}.home-pct{text-align:right;font-size:12px;color:#4f5f75;margin-top:5px}.drawer-backdrop{position:fixed;inset:0;background:rgba(8,18,35,.45);opacity:0;pointer-events:none;transition:.2s;z-index:50}.drawer-backdrop.show{opacity:1;pointer-events:auto}.side-drawer{position:fixed;inset:0 auto 0 0;width:min(420px,88vw);background:#fff;transform:translateX(-102%);transition:.25s;z-index:51;box-shadow:18px 0 45px rgba(0,0,0,.18);display:flex;flex-direction:column}.side-drawer.open{transform:translateX(0)}.drawer-hero{position:relative;background:linear-gradient(145deg,#0b356f,#041f4b);color:#fff;padding:34px 28px 30px;text-align:center}.drawer-close{position:absolute;right:16px;top:10px;border:0;background:transparent;color:#fff;font-size:38px}.drawer-logo{width:92px;height:92px;object-fit:cover;border-radius:16px;margin:8px auto 12px;display:block;background:#000}.drawer-brand{font-size:26px;font-weight:900}.drawer-subtitle{font-size:18px;margin-top:8px;color:#e6edf7}.drawer-menu{padding:18px 0}.drawer-item{width:100%;border:0;border-bottom:1px solid #e6eaf0;background:#fff;display:grid;grid-template-columns:42px 1fr 24px;align-items:center;padding:19px 24px;text-align:left;color:#14213d}.drawer-item span{font-size:24px;color:#314764}.drawer-item b{font-size:18px}.drawer-item em{font-style:normal;font-size:28px;color:#6b7a8f;text-align:right}.drawer-account{margin-top:auto;border-top:1px solid #e2e7ee;padding:20px 24px 24px}.account-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}.account-avatar{width:54px;height:54px;border-radius:50%;background:#edf1f6;color:#7d8999;display:grid;place-items:center;font-size:24px}.account-name{font-size:20px;font-weight:900}.account-role{font-size:13px;color:#2e6fbd;margin-top:3px}.account-meta{font-size:13px;color:#617087;margin-top:4px}.logout-btn{width:100%;margin-top:16px;border:1px solid #dce2ea;border-radius:12px;background:#fff;color:#e33434;font-weight:900;font-size:16px;padding:13px}@media(max-width:700px){.top-header{height:68px}.quick-nav{top:68px}.main-content{padding:24px 12px 48px}.home-card{padding:20px 18px;border-radius:18px}.brand-home{font-size:21px}.quick-item{font-size:10px}.quick-icon{font-size:20px}.my-performance-head select{font-size:12px;padding:9px}}
+
+    /* 고객 CRM */
+    .customer-crm-card{padding:22px}
+    .customer-name-search{margin-bottom:12px}
+    .customer-add-btn{
+      width:100%;border:1px solid #0b3269;border-radius:12px;background:#fff;
+      color:#0b3269;padding:13px 16px;font-weight:900;cursor:pointer;margin-bottom:16px
+    }
+    .customer-add-btn.open{background:#0b3269;color:#fff}
+    .customer-form-wrap{
+      border:1px solid #dfe6ef;border-radius:16px;background:#f9fbfd;
+      padding:18px;margin:4px 0 22px
+    }
+    .customer-form-title{font-size:18px;font-weight:900;color:#132b4f;margin-bottom:14px}
+    .customer-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .customer-field{display:block;font-size:12px;font-weight:800;color:#56657a}
+    .customer-field.full{grid-column:1/-1}
+    .customer-field input,.customer-field select,.customer-field textarea{
+      display:block;width:100%;margin-top:7px;border:1px solid #d8e0ea;
+      border-radius:11px;padding:12px 13px;background:#fff;color:#14213d;font:inherit
+    }
+    .customer-field textarea{resize:vertical;min-height:94px}
+    .unit-input{position:relative}
+    .unit-input input{padding-right:44px}
+    .unit-input span{
+      position:absolute;right:13px;top:50%;transform:translateY(-50%);
+      margin-top:3px;color:#7a8798;font-weight:700
+    }
+    .customer-save-btn{margin-top:16px}
+    .customer-list-head{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-top:8px;padding:2px 2px 10px
+    }
+    .customer-list-head h3{margin:0;color:#132b4f;font-size:18px}
+    .customer-list-head span{font-size:13px;color:#728096;font-weight:800}
+    .customer-list{display:grid;gap:10px}
+    .customer-list-card{
+      width:100%;border:1px solid #dfe6ef;border-radius:14px;background:#fff;padding:14px 15px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;cursor:pointer
+    }
+    .customer-main{min-width:0}
+    .customer-name{font-size:17px;font-weight:900;color:#142b50;margin-bottom:4px}
+    .customer-meta{font-size:12px;color:#768397;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .customer-arrow{color:#697990;font-size:24px;flex:0 0 auto}
+    .customer-empty{
+      border:1px dashed #d9e1ea;border-radius:14px;padding:28px 12px;
+      text-align:center;color:#8b96a5;background:#fbfcfe
+    }
+    @media(max-width:700px){
+      .customer-crm-card{padding:16px}
+      .customer-form-grid{grid-template-columns:1fr}
+      .customer-field.full{grid-column:auto}
+    }
+
+</style>
+
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="application-name" content="FORD 2-TEAM">
+  <meta name="apple-mobile-web-app-title" content="FORD 2-TEAM">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+
+</head>
+<body>
+
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-box">
+    <div class="login-eyebrow">FORD BRANCH</div>
+    <h2>포드2팀 실적/근태 관리</h2>
+    <p>등록된 이메일을 입력해주세요.</p>
+    <input id="entryEmail" type="email" inputmode="email" autocomplete="email" placeholder="이메일 주소">
+    <button id="entryButton" type="button">입장하기</button>
+    <div id="entryMessage" class="entry-message"></div>
+  </div>
+</div>
+
+<div class="app-shell">
+  <header class="top-header">
+    <button class="icon-btn" id="menuOpen" type="button">☰</button>
+    <button class="brand-home" id="brandHome" type="button">FORD 2TEAM</button>
+    <div></div>
+  </header>
+  <nav class="quick-nav">
+    <button class="quick-item" data-view="performance"><span class="quick-icon">▥</span><span>팀실적현황</span></button>
+    <button class="quick-item" data-view="status"><span class="quick-icon">◷</span><span>근태현황</span></button>
+    <button class="quick-item" data-view="customers"><span class="quick-icon">♙</span><span>고객리스트</span></button>
+    <button class="quick-item personal-quick" data-view="personal"><span class="quick-icon">✎</span><span>개인실적</span></button>
+    <button class="quick-item admin-quick" data-view="admin"><span class="quick-icon">▣</span><span>관리자입력</span></button>
+  </nav>
+  <main class="main-content">
+    <section id="home" class="app-view">
+      <div class="home-card">
+        <h2>고객 검색</h2>
+        <p>등록한 고객 이름으로 검색합니다.</p>
+        <div class="customer-search-row"><input id="customerSearchInput" type="search" placeholder="고객 이름을 입력하세요"><button id="customerSearchBtn" type="button">⌕</button></div>
+      </div>
+      <div class="home-card">
+        <div class="my-performance-head"><h2>내 개인실적</h2><select id="homePlanSelect"><option value="A">달성기준 A안</option><option value="B">달성기준 B안</option></select></div>
+        <div id="myPerformanceSummary"></div>
+      </div>
+    </section>
+    <section id="performance" class="app-view" style="display:none">
+      <div class="card performance-card"><div class="performance-title-wrap performance-centered"><h2 class="performance-title">팀 실적현황</h2></div>
+        <button class="criteria-toggle" id="criteriaToggle" type="button" aria-expanded="false"><span>달성기준</span><span class="criteria-chevron" id="criteriaChevron">⌄</span></button>
+        <div class="criteria-combined criteria-collapsible" id="criteriaContent">
+          <div class="criteria-plan criteria-plan-a"><div class="plan-top"><span class="plan-name plan-name-a">A안</span></div><div class="criteria-list"><div class="criteria-row"><span>생보 건수</span><strong>18건</strong></div><div class="criteria-row"><span>생보 CANP</span><strong>1,750만원</strong></div><div class="criteria-row"><span>생보 CMIP</span><strong>290만원</strong></div></div></div>
+          <div class="criteria-plan criteria-plan-b"><div class="plan-top"><span class="plan-name plan-name-b">B안</span></div><div class="criteria-list"><div class="criteria-row"><span>생보 건수</span><strong>16건</strong></div><div class="criteria-row"><span>생보 CANP</span><strong>1,250만원</strong></div><div class="criteria-row"><span>생보 CMIP</span><strong>190만원</strong></div><div class="criteria-row"><span>손보 CMIP</span><strong>100만원</strong></div></div></div>
+        </div>
+        <div class="achievement-section"><div class="criteria-heading"><span>달성현황</span></div><div id="achievementList"></div></div>
+      </div>
+    </section>
+    <section id="status" class="app-view" style="display:none"><div class="card"><div class="monthbar"><button class="arrow" id="prev">‹</button><div style="text-align:center"><h2 id="monthTitle"></h2><div id="periodTitle" style="font-size:12px;color:#7a808a;margin-top:4px"></div></div><button class="arrow" id="next">›</button></div><p class="hint">횟수를 누르면 해당 날짜와 사유를 확인할 수 있습니다.</p><div class="tablewrap"><table><thead><tr><th>팀원</th><th class="direct-head">직출</th><th>20분 지각</th><th>50분 지각</th><th>미보고</th><th>미복귀<br><small>(10건·500 CANP)</small></th><th class="total-head">합계</th></tr></thead><tbody id="attendanceBody"></tbody></table></div></div></section>
+    
+    <section id="customers" class="app-view" style="display:none">
+      <div class="card customer-crm-card">
+        <div class="performance-title-wrap">
+          <h2 class="performance-title">고객리스트</h2>
+        </div>
+
+        <div class="customer-search-row compact customer-name-search">
+          <input id="customerListSearchInput" type="search" placeholder="고객 이름을 입력하세요">
+          <button id="customerListSearchBtn" type="button">검색</button>
+        </div>
+
+        <button class="customer-add-btn" id="customerAddToggle" type="button">+ 신규 등록</button>
+
+        <div class="customer-form-wrap" id="customerFormWrap" style="display:none">
+          <div class="customer-form-title">신규 고객 등록</div>
+          <div class="customer-form-grid">
+            <label class="customer-field full">성함
+              <input id="customerName" type="text" placeholder="고객 성함">
+            </label>
+            <label class="customer-field full">주민번호
+              <input id="residentNumber" type="text" inputmode="numeric" placeholder="예: 900101-1234567">
+            </label>
+            <label class="customer-field">통신사
+              <select id="carrier">
+                <option value="">선택</option>
+                <option value="SKT">SKT</option>
+                <option value="KT">KT</option>
+                <option value="LG U+">LG U+</option>
+                <option value="알뜰폰">알뜰폰</option>
+                <option value="기타">기타</option>
+              </select>
+            </label>
+            <label class="customer-field">전화번호
+              <input id="customerPhone" type="tel" inputmode="tel" placeholder="010-0000-0000">
+            </label>
+            <label class="customer-field full">직업
+              <input id="customerJob" type="text" placeholder="직업">
+            </label>
+            <label class="customer-field">키
+              <div class="unit-input"><input id="heightCm" type="number" min="0" step="0.1" placeholder="0"><span>cm</span></div>
+            </label>
+            <label class="customer-field">몸무게
+              <div class="unit-input"><input id="weightKg" type="number" min="0" step="0.1" placeholder="0"><span>kg</span></div>
+            </label>
+            <label class="customer-field full">운전여부
+              <select id="driving">
+                <option value="">선택</option>
+                <option value="true">운전</option>
+                <option value="false">비운전</option>
+              </select>
+            </label>
+            <label class="customer-field full">계좌번호
+              <input id="accountNumber" type="text" placeholder="은행명 / 계좌번호">
+            </label>
+            <label class="customer-field full">비고
+              <textarea id="customerMemo" rows="4" placeholder="특이사항 및 메모"></textarea>
+            </label>
+            <label class="customer-field full">신분증
+              <input id="idCardFile" type="file" accept="image/*">
+            </label>
+            <label class="customer-field full">보장분석
+              <input id="analysisFile" type="file">
+            </label>
+          </div>
+          <button class="primary customer-save-btn" id="saveCustomer" type="button">고객 저장</button>
+        </div>
+
+        <div class="customer-list-head">
+          <h3>내 고객</h3>
+          <span id="customerCount">0명</span>
+        </div>
+        <div id="customerList" class="customer-list"></div>
+      </div>
+    </section>
+
+    <section id="personal" class="app-view" style="display:none"><div class="card personal-card"><div class="performance-title-wrap"><h2 class="performance-title">개인실적</h2><p class="performance-subtitle">본인 실적만 입력할 수 있습니다.</p></div><div class="personal-form"><label>팀원<div id="perfMemberName" class="fixed-member">-</div></label><label>3W<input id="threeW" type="number" min="0" step="1" placeholder="숫자 입력"></label><label>생보 건수<input id="lifeCount" type="number" min="0" step="1" placeholder="0"></label><label>생보 CANP<input id="lifeCanp" type="number" min="0" step="1" placeholder="만원 단위"></label><label>생보 CMIP<input id="lifeCmip" type="number" min="0" step="1" placeholder="만원 단위"></label><label>손보 건수<input id="nonlifeCount" type="number" min="0" step="1" placeholder="0"></label><label>손보 CMIP<input id="nonlifeCmip" type="number" min="0" step="1" placeholder="만원 단위"></label><button class="save performance-save-button" id="savePerformance">실적 저장</button></div></div></section>
+    <section id="admin" class="app-view" style="display:none"><div class="card"><h2 style="margin-top:0">근태 기록 등록</h2><div class="admin-grid"><div class="field"><label>날짜</label><input type="date" id="date"></div><div class="field"><label>팀원</label><select id="member"></select></div><div class="field full"><label>근태 항목</label><div class="attendance-checks" id="typeChecks"><label class="attendance-check"><input type="checkbox" name="attendanceType" value="직출"><span>직출</span></label><label class="attendance-check"><input type="checkbox" name="attendanceType" value="20분 지각"><span>20분 지각</span></label><label class="attendance-check"><input type="checkbox" name="attendanceType" value="50분 지각"><span>50분 지각</span></label><label class="attendance-check"><input type="checkbox" name="attendanceType" value="미보고"><span>미보고</span></label><label class="attendance-check"><input type="checkbox" name="attendanceType" value="미복귀"><span>미복귀</span></label></div></div><div class="field full"><label>사유</label><input id="reason" placeholder="예: 시간 내 미보고"></div><div class="full"><button class="primary" id="save">등록하기</button></div></div><div class="records"><h3>등록 기록</h3><div id="records"></div></div></div></section>
+  </main>
+</div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="side-drawer" id="sideDrawer" aria-hidden="true">
+  <div class="drawer-hero"><button class="drawer-close" id="drawerClose" type="button">×</button><img class="drawer-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gIYSUNDX1BST0ZJTEUAAQEAAAIIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAAGRyWFlaAAABVAAAABRnWFlaAAABaAAAABRiWFlaAAABfAAAABR3dHB0AAABkAAAABRyVFJDAAABpAAAAChnVFJDAAABpAAAAChiVFJDAAABpAAAAChjcHJ0AAABzAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAEYAAAAcAEQAaQBzAHAAbABhAHkAIABQADMAIABHAGEAbQB1AHQAIAB3AGkAdABoACAAcwBSAEcAQgAgAFQAcgBhAG4AcwBmAGUAcgAAWFlaIAAAAAAAAIPdAAA9vv///7tYWVogAAAAAAAASr8AALE3AAAKuVhZWiAAAAAAAAAoOwAAEQsAAMjLWFlaIAAAAAAAAPbWAAEAAAAA0y1wYXJhAAAAAAAEAAAAAmZmAADypwAADVkAABPQAAAKWwAAAAAAAAAAbWx1YwAAAAAAAAABAAAADGVuVVMAAAAgAAAAHABHAG8AbwBnAGwAZQAgAEkAbgBjAC4AIAAyADAAMQA2/9sAQwADAgIDAgIDAwMDBAMDBAUIBQUEBAUKBwcGCAwKDAwLCgsLDQ4SEA0OEQ4LCxAWEBETFBUVFQwPFxgWFBgSFBUU/9sAQwEDBAQFBAUJBQUJFA0LDRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU/8AAEQgGAAX+AwEiAAIRAQMRAf/EAB4AAQACAQUBAQAAAAAAAAAAAAABAgkDBQcICgYE/8QATRABAAEDAgMEBQgJAgMFBwUAAAECAwQFEQYHIQgSMVEYGUFVkwkUVGGRktHwExUWIlJxgcHhMrFCc6EjJDVTYjM3RWNygrI2Q6Li8v/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDFUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJj+a0UTV1RFPTdyPyZ5O6vzT4lxcHCx667ddURVVEdAW5O8mtZ5qcR4uBhYtddFyuImqKZ2ZrOyV2R9H5SaBi5N7Forz6qYqqrqpjeJ8TsjdknSOUmgY+VlY9FWo1URMzNMbxPi7WWrVFmimmnaIiPAFbVEW6YpinamOkRDWhHTzTExHtBIjePODePOASI3jzg3jzgEiN484N484BIjePODePOASI3jzg3jzgEiN484N484BIjePODePOASg3jzg3jzgFZ/1KxvPVNcxHXeG165r+LoGm3cvKvU27dETVMzOwGu6/icP4F3LzL1Nq3bpmd6piPYxfdurtz71ZWgcO5XhvRVXRP4LduftzdynK4e0HK3rneiqqir2eE/7sXms6zla7nXMvLu1Xbtc7zVUDU1rWsvX8+7m5V6q7euVTM1VTu22fEidgAAAAAAAAAAAAAAAABaPHaVW46JomTrudaxsa3VcuXJiIiIBOjaNk6zm0Y2JaqvXa52pppiZ6snnYX7C03YxeIeI8Xr0roorp3+uPFp9hXsL/p72JxHxFix+jpmmuii5THXr/llL0LRMTQdPs4mJbptWrdMUxFP8gU0TQ8Th/TbOHh2abVq3TFMU0xs3Hbp9a00xv0nZMbecAmEo3jzg3jzgEiN484N484BIjePODePOASI3jzg3jzgEiN484N484BIjePODePOASI3jzg3jzgEiN484N484BIjePODePOASI3jzg3jzgEiN484N484BIjePODePOASI3jzg3jzgEiN484N484BIjePODePOASI3jzg3jzgEiN484N484BIjePODePOASI3jzhE1xE7bwCwpNX1o723/EDUGnNyI/4oaV3NtWI3ruUxH1yD9I2bJ4u0rEje9nWaP51x+L5rX+dfCvD9iq5f1bGmIjrEXKZ/uD72esKT4OsHGnb+5d8KW7kV6jRVXT/DG/8AtLrTzJ+VewsOLlOgUxkeX71VIMleXqmHhUzVfyrVmI8e/XEOO+Ou0RwXwFYrr1DVrMxTEztbuU1T/uw18z/lG+OeOabtqxduYVFXhNF2ZdbuJebnFfFdyudS1jIyaav+GuQZXudnyomj6D+mscNxTlVRvEVV0z/Z0N5u9unjnmPkXotZ93Ds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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9k=" alt="FORD"><div class="drawer-brand">FORD 2TEAM</div><div class="drawer-subtitle">영업지원 시스템</div></div>
+  <div class="drawer-menu"><button class="drawer-item" data-view="performance"><span>▥</span><b>팀 실적현황</b><em>›</em></button><button class="drawer-item" data-view="status"><span>◷</span><b>근태현황</b><em>›</em></button><button class="drawer-item" data-view="customers"><span>♙</span><b>고객리스트</b><em>›</em></button><button class="drawer-item personal-drawer" data-view="personal"><span>✎</span><b>개인실적</b><em>›</em></button><button class="drawer-item admin-drawer" data-view="admin"><span>▣</span><b>관리자입력</b><em>›</em></button></div>
+  <div class="drawer-account"><div class="account-row"><div class="account-avatar">●</div><div><div class="account-name" id="drawerUserName">-</div><div class="account-role" id="drawerUserRole">-</div></div></div><div class="account-meta">권한: <span id="drawerRoleLabel">-</span></div><div class="account-meta">아이디: <span id="drawerRoleId">-</span></div><button id="logoutBtn" class="logout-btn" type="button">로그아웃</button></div>
+</aside>
+<div class="modal" id="modal"><div class="sheet">
+  <div class="sheethead"><div><div class="eyebrow" style="color:#77849a">DETAIL</div><h3 id="detailTitle"></h3></div><button class="close" id="close">×</button></div>
+  <div id="detailList"></div>
+</div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://kdawrwybdffsxlyssmkj.supabase.co";
+const SUPABASE_KEY="sb_publishable_RjjNiifh4kwHVNYZY2k5xQ_lI6gLeKR";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
+});
+
+const MEMBERS=["황수동","조재현","박진완","석윤철","이종찬","정강성"];
+const TYPES=["직출","20분 지각","50분 지각","미보고","미복귀"];
+const PLAN_A={lifeCount:18,lifeCanp:1750,lifeCmip:290};
+const PLAN_B={lifeCount:16,lifeCanp:1250,lifeCmip:190,nonlifeCmip:100};
+
+let currentUser=null;
+let currentProfile=null;
+let profiles=[];
+let profileByName={};
+let profileById={};
+let performanceRows=[];
+let records=[];
+let customers=[];
+
+const now=new Date();
+let viewYear=now.getFullYear(),viewMonth=now.getMonth();
+if(now.getDate()>=27){
+  viewMonth++;
+  if(viewMonth>11){viewMonth=0;viewYear++}
+}
+
+const $=s=>document.querySelector(s);
+
+function escapeHtml(s){
+  return String(s ?? "").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function getPeriod(year,month){
+  const start=new Date(year,month-1,27);
+  const end=new Date(year,month,26,23,59,59,999);
+  return {start,end};
+}
+function inViewPeriod(r){
+  const d=new Date(r.attendance_date+"T00:00:00");
+  const {start,end}=getPeriod(viewYear,viewMonth);
+  return d>=start&&d<=end;
+}
+function fmtDate(s){
+  const d=new Date(s+"T00:00:00");
+  return `${d.getMonth()+1}월 ${d.getDate()}일`;
+}
+function fmtPeriodDate(d){
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function updateMonthClosing(){
+  const today=new Date();
+  const y=today.getFullYear();
+  const m=today.getMonth();
+  const monthEnd=new Date(y,m+1,0);
+  const startToday=new Date(y,m,today.getDate());
+  const diff=Math.ceil((monthEnd-startToday)/(1000*60*60*24));
+  const dday=document.getElementById("monthDday");
+  const endText=document.getElementById("monthEndDate");
+  if(dday) dday.textContent=`D-${diff}`;
+  if(endText) endText.textContent=`(${monthEnd.getMonth()+1}월 ${monthEnd.getDate()}일)`;
+}
+
+async function ensureAuthSession(){
+  let {data:{session},error}=await supabaseClient.auth.getSession();
+  if(error) throw error;
+  if(!session){
+    const result=await supabaseClient.auth.signInAnonymously();
+    if(result.error) throw result.error;
+    session=result.data.session;
+  }
+  currentUser=session.user;
+  return session;
+}
+
+async function getConnectedProfile(){
+  const {data:device,error:deviceError}=await supabaseClient
+    .from("device_sessions")
+    .select("profile_id")
+    .eq("device_user_id",currentUser.id)
+    .maybeSingle();
+
+  if(deviceError) throw deviceError;
+  if(!device?.profile_id) return null;
+
+  const {data:profile,error:profileError}=await supabaseClient
+    .from("profiles")
+    .select("id,name,role")
+    .eq("id",device.profile_id)
+    .maybeSingle();
+
+  if(profileError) throw profileError;
+  return profile || null;
+}
+
+async function loadProfiles(){
+  const {data,error}=await supabaseClient
+    .from("profiles")
+    .select("id,name,role");
+  if(error) throw error;
+
+  profiles=data||[];
+  profileByName={};
+  profileById={};
+  profiles.forEach(p=>{
+    profileById[p.id]=p;
+    if(p.name) profileByName[p.name]=p;
+  });
+}
+
+async function loadPerformance(){
+  const {data,error}=await supabaseClient
+    .from("performance")
+    .select("profile_id,three_w,life_count,life_canp,life_cmip,nonlife_count,nonlife_cmip,updated_at");
+  if(error) throw error;
+  performanceRows=data||[];
+}
+
+
+async function loadCustomers(searchText=""){
+  let query=supabaseClient
+    .from("customers")
+    .select("id,owner_profile_id,customer_name,resident_number,carrier,phone,job,height_cm,weight_kg,driving,account_number,memo,id_card_path,analysis_file_path,created_at,updated_at")
+    .order("customer_name",{ascending:true});
+
+  const q=String(searchText||"").trim();
+  if(q) query=query.ilike("customer_name",`%${q}%`);
+
+  const {data,error}=await query;
+  if(error) throw error;
+  customers=data||[];
+  renderCustomerList();
+}
+
+function renderCustomerList(){
+  const box=document.getElementById("customerList");
+  const count=document.getElementById("customerCount");
+  if(!box) return;
+  if(count) count.textContent=`${customers.length}명`;
+
+  box.innerHTML=customers.length
+    ? customers.map(c=>`
+        <button class="customer-list-card" type="button" onclick="showCustomerDetail('${c.id}')">
+          <div class="customer-main">
+            <div class="customer-name">${escapeHtml(c.customer_name||"-")}</div>
+            <div class="customer-meta">${escapeHtml(c.phone||"전화번호 없음")}${c.job?` · ${escapeHtml(c.job)}`:""}</div>
+          </div>
+          <div class="customer-arrow">›</div>
+        </button>
+      `).join("")
+    : `<div class="customer-empty">등록된 고객이 없습니다.</div>`;
+}
+
+function customerFileExt(file){
+  const parts=String(file?.name||"").split(".");
+  return parts.length>1?parts.pop().replace(/[^a-zA-Z0-9]/g,"").toLowerCase():"bin";
+}
+
+async function uploadCustomerFile(file,customerId,kind){
+  if(!file) return null;
+  const ext=customerFileExt(file);
+  const path=`${currentProfile.id}/${customerId}/${kind}-${Date.now()}.${ext}`;
+  const {error}=await supabaseClient.storage
+    .from("customer-files")
+    .upload(path,file,{upsert:false,contentType:file.type||undefined});
+  if(error) throw error;
+  return path;
+}
+
+function clearCustomerForm(){
+  ["customerName","residentNumber","customerPhone","customerJob","heightCm","weightKg","accountNumber","customerMemo"]
+    .forEach(id=>{const el=document.getElementById(id); if(el) el.value="";});
+  ["carrier","driving"].forEach(id=>{const el=document.getElementById(id); if(el) el.value="";});
+  ["idCardFile","analysisFile"].forEach(id=>{const el=document.getElementById(id); if(el) el.value="";});
+}
+
+async function saveCustomer(){
+  if(!currentProfile) return;
+
+  const name=document.getElementById("customerName").value.trim();
+  if(!name) return alert("성함을 입력해주세요.");
+
+  const customerId=crypto.randomUUID();
+  const idCardFile=document.getElementById("idCardFile").files?.[0]||null;
+  const analysisFile=document.getElementById("analysisFile").files?.[0]||null;
+
+  const btn=document.getElementById("saveCustomer");
+  btn.disabled=true;
+  btn.textContent="저장 중...";
+
+  try{
+    const idCardPath=idCardFile ? await uploadCustomerFile(idCardFile,customerId,"id-card") : null;
+    const analysisPath=analysisFile ? await uploadCustomerFile(analysisFile,customerId,"analysis") : null;
+    const drivingValue=document.getElementById("driving").value;
+
+    const payload={
+      id:customerId,
+      owner_profile_id:currentProfile.id,
+      customer_name:name,
+      resident_number:document.getElementById("residentNumber").value.trim()||null,
+      carrier:document.getElementById("carrier").value||null,
+      phone:document.getElementById("customerPhone").value.trim()||null,
+      job:document.getElementById("customerJob").value.trim()||null,
+      height_cm:Number(document.getElementById("heightCm").value)||null,
+      weight_kg:Number(document.getElementById("weightKg").value)||null,
+      driving:drivingValue===""?null:drivingValue==="true",
+      account_number:document.getElementById("accountNumber").value.trim()||null,
+      memo:document.getElementById("customerMemo").value.trim()||null,
+      id_card_path:idCardPath,
+      analysis_file_path:analysisPath,
+      updated_at:new Date().toISOString()
+    };
+
+    const {error}=await supabaseClient.from("customers").insert(payload);
+    if(error) throw error;
+
+    clearCustomerForm();
+    document.getElementById("customerFormWrap").style.display="none";
+    const toggle=document.getElementById("customerAddToggle");
+    toggle.classList.remove("open");
+    toggle.textContent="+ 신규 등록";
+
+    await loadCustomers();
+    alert("고객이 저장되었습니다.");
+  }catch(err){
+    console.error("고객 저장 오류:", err);
+    const detail = err?.message || err?.error_description || err?.details || String(err);
+    alert(`고객 저장 실패\n\n${detail}`);
+  }finally{
+    btn.disabled=false;
+    btn.textContent="고객 저장";
+  }
+}
+
+window.showCustomerDetail=(id)=>{
+  const c=customers.find(x=>x.id===id);
+  if(!c) return;
+  const driving=c.driving===true?"운전":c.driving===false?"비운전":"-";
+
+  $("#detailTitle").textContent=`${c.customer_name} · 고객정보`;
+  $("#detailList").innerHTML=`
+    <div class="detail"><b>전화번호</b><span>${escapeHtml(c.phone||"-")}</span></div>
+    <div class="detail"><b>주민번호</b><span>${escapeHtml(c.resident_number||"-")}</span></div>
+    <div class="detail"><b>통신사</b><span>${escapeHtml(c.carrier||"-")}</span></div>
+    <div class="detail"><b>직업</b><span>${escapeHtml(c.job||"-")}</span></div>
+    <div class="detail"><b>키 / 몸무게</b><span>${c.height_cm||"-"} cm / ${c.weight_kg||"-"} kg</span></div>
+    <div class="detail"><b>운전여부</b><span>${driving}</span></div>
+    <div class="detail"><b>계좌번호</b><span>${escapeHtml(c.account_number||"-")}</span></div>
+    <div class="detail"><b>비고</b><span>${escapeHtml(c.memo||"-")}</span></div>
+  `;
+  $("#modal").classList.add("show");
+};
+
+
+async function loadAttendance(){
+  const {data,error}=await supabaseClient
+    .from("attendance")
+    .select("id,profile_id,attendance_date,attendance_type,reason,created_by,created_at");
+  if(error) throw error;
+  records=data||[];
+}
+
+function configureRoleUI(){
+  const role=currentProfile?.role;
+  const canPersonal=role!=="viewer";
+  const canAdmin=["attendance_admin","super_admin"].includes(role);
+  document.querySelectorAll(".personal-quick,.personal-drawer").forEach(el=>el.style.display=canPersonal?"":"none");
+  document.querySelectorAll(".admin-quick,.admin-drawer").forEach(el=>el.style.display=canAdmin?"":"none");
+  const nameBox=document.getElementById("perfMemberName"); if(nameBox) nameBox.textContent=currentProfile?.name||"-";
+  const roleNames={viewer:"조회 전용",member:"팀원",attendance_admin:"출석관리자",super_admin:"최고관리자"};
+  document.getElementById("drawerUserName").textContent=currentProfile?.name||"-";
+  document.getElementById("drawerUserRole").textContent=role||"-";
+  document.getElementById("drawerRoleLabel").textContent=roleNames[role]||"-";
+  document.getElementById("drawerRoleId").textContent=role||"-";
+}
+
+async function refreshAll(){
+  await loadProfiles();
+  await Promise.all([loadPerformance(),loadAttendance(),loadCustomers()]);
+  renderAchievements();
+  render();
+  loadPerformanceForm();
+}
+
+async function enterWithEmail(){
+  const email=$("#entryEmail").value.trim();
+  const button=$("#entryButton");
+  const msg=$("#entryMessage");
+  if(!email){
+    msg.textContent="이메일을 입력해주세요.";
+    return;
+  }
+
+  button.disabled=true;
+  msg.textContent="확인 중입니다...";
+
+  try{
+    await ensureAuthSession();
+    const {data,error}=await supabaseClient.rpc("connect_my_device",{input_email:email});
+    if(error) throw error;
+
+    currentProfile={
+      id:data.profile_id,
+      name:data.name,
+      role:data.role
+    };
+
+    $("#loginOverlay").classList.add("hidden");
+    msg.textContent="";
+    await startApp();
+  }catch(err){
+    console.error(err);
+    msg.textContent=err?.message?.includes("등록되지 않은 이메일")
+      ?"등록되지 않은 이메일입니다."
+      :"입장 처리 중 오류가 발생했습니다.";
+  }finally{
+    button.disabled=false;
+  }
+}
+
+async function startApp(){
+  configureRoleUI();
+  await refreshAll();
+  renderMyPerformance();
+  showView("home");
+}
+
+async function bootstrap(){
+  updateMonthClosing();
+
+  try{
+    await ensureAuthSession();
+    currentProfile=await getConnectedProfile();
+
+    if(currentProfile){
+      $("#loginOverlay").classList.add("hidden");
+      await startApp();
+    }else{
+      $("#loginOverlay").classList.remove("hidden");
+    }
+  }catch(err){
+    console.error(err);
+    $("#entryMessage").textContent="연결 중 오류가 발생했습니다.";
+    $("#loginOverlay").classList.remove("hidden");
+  }
+}
+
+function perfOf(name){
+  const profile=profileByName[name];
+  if(!profile){
+    return {threeW:0,lifeCount:0,lifeCanp:0,lifeCmip:0,nonlifeCount:0,nonlifeCmip:0};
+  }
+  const row=performanceRows.find(r=>r.profile_id===profile.id);
+  return {
+    threeW:Number(row?.three_w)||0,
+    lifeCount:Number(row?.life_count)||0,
+    lifeCanp:Number(row?.life_canp)||0,
+    lifeCmip:Number(row?.life_cmip)||0,
+    nonlifeCount:Number(row?.nonlife_count)||0,
+    nonlifeCmip:Number(row?.nonlife_cmip)||0
+  };
+}
+
+
+function renderMyPerformance(){
+  const box=document.getElementById("myPerformanceSummary"); if(!box||!currentProfile)return;
+  const p=perfOf(currentProfile.name); const plan=document.getElementById("homePlanSelect")?.value||"A";
+  const rows=plan==="A"?[["생보 건수",p.lifeCount,PLAN_A.lifeCount,"a"],["생보 CANP",p.lifeCanp,PLAN_A.lifeCanp,"a"],["생보 CMIP",p.lifeCmip,PLAN_A.lifeCmip,"a"]]:[["생보 건수",p.lifeCount,PLAN_B.lifeCount,"b"],["생보 CANP",p.lifeCanp,PLAN_B.lifeCanp,"b"],["생보 CMIP",p.lifeCmip,PLAN_B.lifeCmip,"b"],["손보 건수",p.nonlifeCount,null,"b"],["손보 CMIP",p.nonlifeCmip,PLAN_B.nonlifeCmip,"b"]];
+  box.innerHTML=rows.map(([label,value,max,tone])=>{const v=Number(value)||0;const pct=max?Math.min(100,Math.round(v/max*100)):0;const right=max?`${v.toLocaleString("ko-KR")} / ${Number(max).toLocaleString("ko-KR")}`:`${v.toLocaleString("ko-KR")}건`;return `<div class="home-metric ${tone}"><div class="home-metric-line"><span>${label}</span><strong>${right}</strong></div>${max?`<div class="home-bar"><i style="width:${pct}%"></i></div><div class="home-pct">${pct}%</div>`:""}</div>`}).join("");
+}
+function showView(view){
+  document.querySelectorAll(".app-view").forEach(el=>el.style.display="none"); const t=document.getElementById(view); if(t)t.style.display="block";
+  document.querySelectorAll(".quick-item").forEach(el=>el.classList.toggle("active",el.dataset.view===view));
+  if(view==="home")renderMyPerformance();
+  if(view==="performance")loadPerformance().then(renderAchievements); else if(view==="status"||view==="admin")loadAttendance().then(render); else if(view==="personal")loadPerformance().then(()=>{loadPerformanceForm();renderMyPerformance()});
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function openDrawer(){document.getElementById("sideDrawer").classList.add("open");document.getElementById("drawerBackdrop").classList.add("show")}
+function closeDrawer(){document.getElementById("sideDrawer").classList.remove("open");document.getElementById("drawerBackdrop").classList.remove("show")}
+function metricHtml(label,value,max){
+  const pct=max?Math.min(100,(Number(value)||0)/max*100):0;
+  const valueText=Number(value||0).toLocaleString("ko-KR");
+  const maxText=max?Number(max).toLocaleString("ko-KR"):"";
+  return `<div class="metric">
+    <div class="metric-line"><span>${label}</span><strong>${valueText}${max?` / ${maxText}`:""}</strong></div>
+    ${max?`<div class="bar"><span style="width:${pct}%"></span></div>`:`<div class="no-target">현재 ${valueText} · 달성기준 없음</div>`}
+  </div>`;
+}
+
+function planRate(p,plan){
+  const rates=[];
+  if(plan.lifeCount) rates.push(Math.min(100,(Number(p.lifeCount)||0)/plan.lifeCount*100));
+  if(plan.lifeCanp) rates.push(Math.min(100,(Number(p.lifeCanp)||0)/plan.lifeCanp*100));
+  if(plan.lifeCmip) rates.push(Math.min(100,(Number(p.lifeCmip)||0)/plan.lifeCmip*100));
+  if(plan.nonlifeCmip) rates.push(Math.min(100,(Number(p.nonlifeCmip)||0)/plan.nonlifeCmip*100));
+  return rates.length?Math.floor(Math.min(...rates)):0;
+}
+
+function renderAchievements(){
+  const box=document.getElementById("achievementList");
+  if(!box) return;
+
+  box.innerHTML=MEMBERS.map((name,idx)=>{
+    const p=perfOf(name);
+    const aRate=planRate(p,PLAN_A);
+    const bRate=planRate(p,PLAN_B);
+
+    return `<div class="member-accordion">
+      <button class="member-summary" type="button" onclick="toggleMember(${idx})">
+        <span class="member-summary-left">
+          <span class="member-summary-name">${name}</span>
+        </span>
+        <span class="member-summary-right">
+          <span class="threew ${Number(p.threeW)===0?'zero-value':''}">3W ${Number(p.threeW)||0}주</span>
+          <span class="chev" id="chev-${idx}">⌄</span>
+        </span>
+      </button>
+      <div class="member-detail" id="member-detail-${idx}">
+        <div class="combined-plan">
+          <div class="plan-section plan-section-a">
+            <div class="progress-card-title">A안</div>
+            ${metricHtml("생보 건수",p.lifeCount,PLAN_A.lifeCount)}
+            ${metricHtml("CANP",p.lifeCanp,PLAN_A.lifeCanp)}
+            ${metricHtml("생보 CMIP",p.lifeCmip,PLAN_A.lifeCmip)}
+          </div>
+          <div class="plan-section plan-section-b">
+            <div class="progress-card-title">B안</div>
+            ${metricHtml("생보 건수",p.lifeCount,PLAN_B.lifeCount)}
+            ${metricHtml("CANP",p.lifeCanp,PLAN_B.lifeCanp)}
+            ${metricHtml("생보 CMIP",p.lifeCmip,PLAN_B.lifeCmip)}
+            ${metricHtml("손보 CMIP",p.nonlifeCmip,PLAN_B.nonlifeCmip)}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+window.toggleMember=(idx)=>{
+  const detail=document.getElementById(`member-detail-${idx}`);
+  const chev=document.getElementById(`chev-${idx}`);
+  if(!detail) return;
+  const open=detail.classList.toggle("open");
+  if(chev) chev.textContent=open?"⌃":"⌄";
+};
+
+function loadPerformanceForm(){
+  if(!currentProfile || currentProfile.role==="viewer") return;
+
+  const nameBox=document.getElementById("perfMemberName");
+  if(nameBox) nameBox.textContent=currentProfile.name;
+
+  const p=perfOf(currentProfile.name);
+  document.getElementById("threeW").value=p.threeW||"";
+  document.getElementById("lifeCount").value=p.lifeCount||"";
+  document.getElementById("lifeCanp").value=p.lifeCanp||"";
+  document.getElementById("lifeCmip").value=p.lifeCmip||"";
+  document.getElementById("nonlifeCount").value=p.nonlifeCount||"";
+  document.getElementById("nonlifeCmip").value=p.nonlifeCmip||"";
+}
+
+async function savePerformance(){
+  if(!currentProfile || currentProfile.role==="viewer") return;
+
+  const payload={
+    profile_id:currentProfile.id,
+    three_w:Number(document.getElementById("threeW").value)||0,
+    life_count:Number(document.getElementById("lifeCount").value)||0,
+    life_canp:Number(document.getElementById("lifeCanp").value)||0,
+    life_cmip:Number(document.getElementById("lifeCmip").value)||0,
+    nonlife_count:Number(document.getElementById("nonlifeCount").value)||0,
+    nonlife_cmip:Number(document.getElementById("nonlifeCmip").value)||0,
+    updated_at:new Date().toISOString()
+  };
+
+  const {error}=await supabaseClient
+    .from("performance")
+    .upsert(payload,{onConflict:"profile_id"});
+
+  if(error){
+    console.error(error);
+    alert("실적 저장에 실패했습니다.");
+    return;
+  }
+
+  await loadPerformance();
+  renderAchievements();
+  renderMyPerformance();
+  alert("개인 실적이 저장되었습니다.");
+}
+
+function render(){
+  $("#monthTitle").textContent=`${viewYear}년 ${viewMonth+1}월`;
+  const period=getPeriod(viewYear,viewMonth);
+  $("#periodTitle").textContent=`집계기간 ${fmtPeriodDate(period.start)} ~ ${fmtPeriodDate(period.end)}`;
+
+  $("#attendanceBody").innerHTML=MEMBERS.map(name=>{
+    const profile=profileByName[name];
+    const memberRecords=records.filter(r=>profile && r.profile_id===profile.id && inViewPeriod(r));
+
+    const cells=TYPES.map(type=>{
+      const n=memberRecords.filter(r=>r.attendance_type===type).length;
+      const extra=type==="직출"?" direct-count":"";
+      return `<td><button class="count${extra}" onclick="showDetail('${name}','${type}')">${n}회</button></td>`;
+    }).join("");
+
+    const total=memberRecords.filter(r=>r.attendance_type!=="직출").length;
+    const totalCell=`<td class="total-cell"><button class="count total-count" onclick="showTotal('${name}')">${total}회</button></td>`;
+    return `<tr><td class="person">${name}</td>${cells}${totalCell}</tr>`;
+  }).join("");
+
+  const canManage=["attendance_admin","super_admin"].includes(currentProfile?.role);
+  const sorted=[...records].sort((a,b)=>{
+    const dateCompare=b.attendance_date.localeCompare(a.attendance_date);
+    return dateCompare || Number(b.id)-Number(a.id);
+  });
+
+  $("#records").innerHTML=sorted.length
+    ? sorted.map(r=>{
+        const name=profileById[r.profile_id]?.name||"-";
+        return `<div class="record">
+          <div><b>${r.attendance_date} · ${escapeHtml(name)} · ${escapeHtml(r.attendance_type)}</b>
+          <small>사유: ${escapeHtml(r.reason||"-")}</small></div>
+          ${canManage?`<button class="danger" onclick="removeRecord(${r.id})">삭제</button>`:""}
+        </div>`;
+      }).join("")
+    : `<div class="empty">아직 등록된 기록이 없습니다.</div>`;
+}
+
+window.showDetail=(member,type)=>{
+  const profile=profileByName[member];
+  const list=records
+    .filter(r=>profile && r.profile_id===profile.id && r.attendance_type===type && inViewPeriod(r))
+    .sort((a,b)=>a.attendance_date.localeCompare(b.attendance_date));
+
+  $("#detailTitle").textContent=`${member} · ${type} · ${list.length}회`;
+  $("#detailList").innerHTML=list.length
+    ? list.map(r=>`<div class="detail"><b>${fmtDate(r.attendance_date)}</b><span>사유: ${escapeHtml(r.reason||"-")}</span></div>`).join("")
+    : `<div class="empty">해당 집계기간의 기록이 없습니다.</div>`;
+
+  $("#modal").classList.add("show");
+};
+
+window.showTotal=(member)=>{
+  const profile=profileByName[member];
+  const list=records
+    .filter(r=>profile && r.profile_id===profile.id && r.attendance_type!=="직출" && inViewPeriod(r))
+    .sort((a,b)=>a.attendance_date.localeCompare(b.attendance_date));
+
+  $("#detailTitle").textContent=`${member} · 합계 · ${list.length}회`;
+  $("#detailList").innerHTML=list.length
+    ? list.map(r=>`<div class="detail"><b>${fmtDate(r.attendance_date)} · ${escapeHtml(r.attendance_type)}</b><span>사유: ${escapeHtml(r.reason||"-")}</span></div>`).join("")
+    : `<div class="empty">해당 집계기간의 기록이 없습니다.</div>`;
+
+  $("#modal").classList.add("show");
+};
+
+window.removeRecord=async(id)=>{
+  if(!confirm("이 기록을 삭제할까요?")) return;
+
+  const {error}=await supabaseClient
+    .from("attendance")
+    .delete()
+    .eq("id",id);
+
+  if(error){
+    console.error(error);
+    alert("삭제 권한이 없거나 삭제에 실패했습니다.");
+    return;
+  }
+
+  await loadAttendance();
+  render();
+};
+
+async function saveAttendance(){
+  if(!["attendance_admin","super_admin"].includes(currentProfile?.role)){
+    alert("근태 입력 권한이 없습니다.");
+    return;
+  }
+
+  const date=$("#date").value;
+  const member=$("#member").value;
+  const reason=$("#reason").value.trim();
+  const selectedTypes=[...document.querySelectorAll('input[name="attendanceType"]:checked')].map(el=>el.value);
+
+  if(!date) return alert("날짜를 선택해주세요.");
+  if(!selectedTypes.length) return alert("근태 항목을 하나 이상 선택해주세요.");
+
+  const profile=profileByName[member];
+  if(!profile) return alert("팀원 정보를 찾을 수 없습니다.");
+
+  const rows=selectedTypes.map(type=>({
+    profile_id:profile.id,
+    attendance_date:date,
+    attendance_type:type,
+    reason:reason||null,
+    created_by:currentUser.id
+  }));
+
+  const {error}=await supabaseClient
+    .from("attendance")
+    .insert(rows);
+
+  if(error){
+    console.error(error);
+    alert("근태 등록에 실패했습니다.");
+    return;
+  }
+
+  $("#reason").value="";
+  document.querySelectorAll('input[name="attendanceType"]').forEach(el=>el.checked=false);
+
+  await loadAttendance();
+  render();
+  alert(`${selectedTypes.length}개 항목을 등록했습니다.`);
+}
+
+$("#entryButton").addEventListener("click",enterWithEmail);
+$("#entryEmail").addEventListener("keydown",e=>{
+  if(e.key==="Enter") enterWithEmail();
+});
+
+$("#close").onclick=()=>$("#modal").classList.remove("show");
+$("#modal").onclick=e=>{if(e.target.id==="modal") $("#modal").classList.remove("show");};
+
+$("#prev").onclick=async()=>{
+  viewMonth--;
+  if(viewMonth<0){viewMonth=11;viewYear--;}
+  await loadAttendance();
+  render();
+};
+$("#next").onclick=async()=>{
+  viewMonth++;
+  if(viewMonth>11){viewMonth=0;viewYear++;}
+  await loadAttendance();
+  render();
+};
+
+
+$("#member").innerHTML=MEMBERS.map(x=>`<option>${x}</option>`).join("");
+$("#date").value=new Date().toLocaleDateString("en-CA");
+$("#save").onclick=saveAttendance;
+
+const savePerf=document.getElementById("savePerformance");
+if(savePerf) savePerf.addEventListener("click",savePerformance);
+
+
+const criteriaToggle=document.getElementById("criteriaToggle");
+if(criteriaToggle){
+  criteriaToggle.addEventListener("click",()=>{
+    const content=document.getElementById("criteriaContent");
+    const chev=document.getElementById("criteriaChevron");
+    const open=content.classList.toggle("open");
+    criteriaToggle.setAttribute("aria-expanded",open?"true":"false");
+    if(chev) chev.textContent=open?"⌃":"⌄";
+  });
+}
+
+
+document.getElementById("menuOpen")?.addEventListener("click",openDrawer);
+document.getElementById("drawerClose")?.addEventListener("click",closeDrawer);
+document.getElementById("drawerBackdrop")?.addEventListener("click",closeDrawer);
+document.getElementById("brandHome")?.addEventListener("click",()=>showView("home"));
+document.querySelectorAll("[data-view]").forEach(btn=>btn.addEventListener("click",()=>{closeDrawer();showView(btn.dataset.view)}));
+document.getElementById("homePlanSelect")?.addEventListener("change",renderMyPerformance);
+document.getElementById("customerSearchBtn")?.addEventListener("click",()=>{const q=document.getElementById("customerSearchInput")?.value.trim();showView("customers");const i=document.getElementById("customerListSearchInput");if(i&&q)i.value=q});
+document.getElementById("customerSearchInput")?.addEventListener("keydown",e=>{if(e.key==="Enter")document.getElementById("customerSearchBtn")?.click()});
+
+document.getElementById("customerListSearchBtn")?.addEventListener("click",()=>{
+  loadCustomers(document.getElementById("customerListSearchInput")?.value||"")
+    .catch(err=>{console.error(err);alert("고객 검색에 실패했습니다.");});
+});
+
+document.getElementById("customerListSearchInput")?.addEventListener("keydown",e=>{
+  if(e.key==="Enter") document.getElementById("customerListSearchBtn")?.click();
+});
+
+document.getElementById("customerAddToggle")?.addEventListener("click",()=>{
+  const wrap=document.getElementById("customerFormWrap");
+  const btn=document.getElementById("customerAddToggle");
+  const open=wrap.style.display==="none" || !wrap.style.display;
+  wrap.style.display=open?"block":"none";
+  btn.classList.toggle("open",open);
+  btn.textContent=open?"등록창 닫기":"+ 신규 등록";
+});
+
+document.getElementById("saveCustomer")?.addEventListener("click",saveCustomer);
+
+document.getElementById("logoutBtn")?.addEventListener("click",async()=>{try{await supabaseClient.auth.signOut()}catch(e){console.error(e)}location.reload()});
+
+bootstrap();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(err => {
+      console.error("Service worker registration failed:", err);
+    });
+  });
+}
+</script>
+
+</body>
+</html>
